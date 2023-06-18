@@ -1,5 +1,5 @@
 from django import forms
 
 
-class CppCodeForm(forms.Form):
-    cppCode = forms.CharField(widget=forms.Textarea)
+class CppForm(forms.Form):
+    cpp = forms.CharField(widget=forms.Textarea)

@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>C++ Compiler</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.3/codemirror.min.css">
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
     <style>
         .CodeMirror {
             height: 600px;
@@ -12,63 +9,57 @@
             max-height: 600px;
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.3/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.3/mode/clike/clike.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.3/addon/edit/closebrackets.min.js"></script>
-</head>
-<body>
-    <div class="container">
-        <div class="text-center mb-4">
-            <h1 style="display: inline;">C++ Compiler</h1>
+    <div class="text-center mb-4">
+        <h1 style="display: inline;">C++ Compiler</h1>
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <textarea class="form-control" id="cpp" name="cpp">{{ form.cpp.value|default_if_none:'' }}</textarea>
         </div>
-        <form method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <textarea class="form-control" id="cppCode" name="cppCode">{{ form.cppCode.value|default_if_none:'' }}</textarea>
-            </div>
-            <div class="text-center mb-4">
-                <button type="submit" class="btn btn-primary">Run</button>
-            </div>
-        </form>
-        {% if output %}
-            <div class="alert alert-success">
-                <h3>Output:</h3>
-                <pre>{{ output }}</pre>
-            </div>
-        {% endif %}
-        {% if error %}
-            <div class="alert alert-danger">
-                <h3>Error:</h3>
-                <pre>{{ error }}</pre>
-            </div>
-        {% endif %}
-        <script>
-            var editor = CodeMirror.fromTextArea(document.getElementById("cppCode"), {
-                lineNumbers: true,
-                mode: "text/x-c++src",
-                autoCloseBrackets: true,
-                undoDepth: 50,
-                extraKeys: {
-                    "Ctrl-Z": "undo",
-                    "Cmd-Z": "undo",
-                    "Ctrl-Y": "redo",
-                    "Cmd-Y": "redo",
-                    "Tab": function(cm) {
-                        if (cm.somethingSelected()) {
-                            cm.indentSelection("add");
-                        } else {
-                            cm.execCommand("insertSoftTab");
-                        }
-                    },
-                    "Shift-Tab": function(cm) {
-                        cm.indentSelection("subtract");
+        <div class="text-center mb-4">
+            <button type="submit" class="btn btn-primary">Run</button>
+            <a href="{% url 'download' %}?cpp={{ form.cpp.value|urlencode }}" class="btn btn-primary">Download C++ Code</a>
+        </div>
+
+    </form>
+    {% if output %}
+        <div class="alert alert-success">
+            <h3>Output:</h3>
+            <pre>{{ output }}</pre>
+        </div>
+    {% endif %}
+    {% if error %}
+        <div class="alert alert-danger">
+            <h3>Error:</h3>
+            <pre>{{ error }}</pre>
+        </div>
+    {% endif %}
+    <script>
+        var editor = CodeMirror.fromTextArea(document.getElementById("cpp"), {
+            lineNumbers: true,
+            mode: "text/x-c++src",
+            autoCloseBrackets: true,
+            undoDepth: 50,
+            extraKeys: {
+                "Ctrl-Z": "undo",
+                "Cmd-Z": "undo",
+                "Ctrl-Y": "redo",
+                "Cmd-Y": "redo",
+                "Tab": function(cm) {
+                    if (cm.somethingSelected()) {
+                        cm.indentSelection("add");
+                    } else {
+                        cm.execCommand("insertSoftTab");
                     }
                 },
-                indentUnit: 4,
-                tabSize: 4,
-                indentWithTabs: false
-            });
-        </script>
-    </div>
-</body>
-</html>
+                "Shift-Tab": function(cm) {
+                    cm.indentSelection("subtract");
+                }
+            },
+            indentUnit: 4,
+            tabSize: 4,
+            indentWithTabs: false
+        });
+    </script>
+{% endblock %}
