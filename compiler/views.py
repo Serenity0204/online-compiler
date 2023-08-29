@@ -4,11 +4,13 @@ from .utils import run_cpp
 from django.http import HttpResponse
 
 
-DEFAULT_CODE = """#include <iostream>
+DEFAULT_CODE = """
+#include <iostream>
 using namespace std;
-int main() {
-   cout << "Hello, World!" << endl; // This prints Hello, World!
-   return 0;
+int main() 
+{
+    cout << "Hello, World!" << endl; // This prints Hello, World!
+    return 0;
 }"""
 
 
